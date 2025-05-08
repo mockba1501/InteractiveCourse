@@ -1,14 +1,16 @@
 
 import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 
 const MealDetails = () => {
+  const {id} = useParams();
   const [meal, setMeal] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMealDetails = async () => {
       try {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=53033`);
+        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
         const data = await response.json();
         setMeal(data.meals[0]);
       } catch (error) {
@@ -19,7 +21,7 @@ const MealDetails = () => {
     };
 
     fetchMealDetails();
-  });
+  },[id]);
 
   if (loading) return <div className="loading">Loading meal details...</div>;
   if (!meal) return <div>Meal not found</div>;
@@ -37,7 +39,9 @@ const MealDetails = () => {
 
   return (
     <div className="meal-details-container">
-            
+            <Link to="/" className='back-link'>
+            <i className='fas fa-arrow-left'></i> Back to Home
+            </Link>
       <div className="meal-details">
         <div className="meal-image">
           <img src={meal.strMealThumb} alt={meal.strMeal} />
